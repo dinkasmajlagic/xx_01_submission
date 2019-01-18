@@ -14,6 +14,8 @@ Task for the statistician position at the FHI
 4) All the code can be found in Run.R
     4.1) I did not save any Excel files and I saved only 1 plot for one randomly chosen municipality 
     4.2) One can find the code for decomposition plot and forecast plot in Run.R written for one randomly chosen municipality 
+    
+
 
 
 
