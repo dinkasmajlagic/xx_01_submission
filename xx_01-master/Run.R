@@ -75,6 +75,15 @@ training423 <- ts(training422$newvalue, frequency=365.25/7) #start=decimal_date(
 trainingcomponent <- decompose(training423)
 plot(trainingcomponent)
 
+#Splitting the data into seasonality variable, trend variable and random variable (in additive model when they are summed up they represent observed data)
+stl(training423, s.window="periodic")
+
+#Fitting ARIMA models
+arima <- auto.arima(training423)
+
+#Create 2SD prediction interval
+
+
 #GGPLOT
 a <- training152
 a$mean <- mean(a$newvalue)
