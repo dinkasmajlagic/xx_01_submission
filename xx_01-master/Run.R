@@ -3,9 +3,9 @@ library(data.table)
 library(dplyr)
 library(ISOweek)
 library(tidyr)
-library(ggplot2)
 library(forecast)
 library(lubridate)
+
 
 
 #Change the working directory
@@ -26,7 +26,9 @@ X <- split(d,d$location)
 fakedata <- data.table(date = seq.Date(as.Date("2000-01-01"), as.Date("2010-12-31"), by = 1))
 
 
+
 #==================
+
 
 
 #AGGREGATING THE DATA
@@ -56,8 +58,10 @@ for (i in 1:422) {
    }
 
 
+
 #==================
   
+
 
 #CHECKING SEASONALITY 
 timedata <- data.frame()
@@ -73,25 +77,32 @@ for (i in 0:422) {
   #Save the time of the most dominant period of each municipality in a timedata
   timedata <- rbind(timedata, time)
 }
+
+names(timedata) <- c("time","spec")
+max(timedata$time)
+min(timedata$time)
 #Timedata has in the first column only values of 54 
 #The weekly data i.e. training1 to training422 is periodic with the period being 54 weeks which is approx 1 year
+
+
 
 #==================
 
 
-#DECOMPOSING THE DATA FOR ONE MUNICIPALITY (155th randomly chosen)
-training155 <- ts(training155$newvalue, frequency=365.25/7, start=decimal_date(ymd("2000-01-01"))) #end=decimal_date(ymd("2001-01-01")))
-trainingcomponent <- decompose(training155)
+
+#DECOMPOSING THE DATA FOR ONE MUNICIPALITY (180th randomly chosen)
+training180 <- ts(training180$newvalue, frequency=365.25/7, start=decimal_date(ymd("2000-01-01"))) #end=decimal_date(ymd("2001-01-01")))
+trainingcomponent <- decompose(training180)
 plot(trainingcomponent)
 
-#Splitting the data into seasonality variable, trend variable and random variable (in additive model when they are summed up they represent observed data)
-split155 <- stl(training155, s.window="periodic")
+#Splitting the data into seasonality variable, trend variable and random variable (additive model)
+split180 <- stl(training180, s.window="periodic")
 
 #Fitting ARIMA models
 #Finding best K to minimize AICc 
 bestfit=list(aicc=Inf)
 for (i in 1:25) {
-  fit <- auto.arima(training155, xreg=fourier(training155,K=i), seasonal=FALSE)
+  fit <- auto.arima(training180, xreg=fourier(training180,K=i), seasonal=FALSE)
   if(fit$aicc < bestfit$aicc)
     bestfit <- fit
     
@@ -101,23 +112,11 @@ for (i in 1:25) {
   print(fit$aicc)
   }
 
-#K=1 for 155th municipality
-fc155 <- forecast(bestfit, xreg=fourier(training155, K=1, h=365.25/7))
-autoplot(fc155)
+#K=3 for 180th municipality
+fc180 <- forecast(bestfit, xreg=fourier(training180, K=3, h=365.25/7))
+autoplot(fc180)
 
 
-#==================
-
-
-#GGPLOT script with the dummy data
-
-training1$mean <- mean(training1$newvalue)
-training1$sd <- as.numeric(sd(training1$newvalue))
-
-ggplot(data=training1, aes(x=week, y=newvalue, group=1)) +
-  geom_line() +
-  geom_ribbon(aes(ymin=training1$mean-training1$newvalue, ymax=training1$mean+training1$newvalue),linetype=2,alpha=0.1,fill="red") + 
-  geom_ribbon(aes(ymin=training1$newvalue, ymax=100),linetype=2,alpha=0.8,fill="blue") 
 
 
 
