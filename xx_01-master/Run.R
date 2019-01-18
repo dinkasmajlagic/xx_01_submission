@@ -10,7 +10,6 @@ library(lubridate)
 
 #Change the working directory
 setwd("/git/xx_01_submission/xx_01-master")
-wd <- getwd()
 
 fileSources = file.path("code", list.files("code", pattern = "*.[rR]$"))
 sapply(fileSources, source, .GlobalEnv)
