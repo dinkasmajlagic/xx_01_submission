@@ -10,6 +10,7 @@ library(lubridate)
 
 #Change the working directory
 setwd("/git/xx_01_submission/xx_01-master")
+wd <- getwd()
 
 fileSources = file.path("code", list.files("code", pattern = "*.[rR]$"))
 sapply(fileSources, source, .GlobalEnv)
@@ -114,7 +115,9 @@ for (i in 1:25) {
 
 #K=3 for 180th municipality
 fc180 <- forecast(bestfit, xreg=fourier(training180, K=3, h=365.25/7))
+png("results/municipality_results/overview_Municip1127.png", width = 1037, height = 475)
 autoplot(fc180)
+dev.off()
 
 
 

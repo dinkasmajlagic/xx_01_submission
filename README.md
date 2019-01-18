@@ -9,8 +9,8 @@ Task for the statistician position at the FHI
     I was able to fit the regression model
     I was able to perform the forecasting and to predict the data based on the training data
     
-    All the code can be found in Run.R
-    I did not save any Excel files nor any plots since I was not able to finish the task
+4) All the code can be found in Run.R
+    I did not save any Excel files and I saved only 1 plot for one randomly chosen municipality 
     One can find the code for decomposition plot and forecast plot in Run.R written for one randomly chosen municipality 
 
 
